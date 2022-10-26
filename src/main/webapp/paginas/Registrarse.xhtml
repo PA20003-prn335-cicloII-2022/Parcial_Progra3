@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Registro Bolsa de Trabajo</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <h:outputStylesheet library="primeflex_3_1_2" name="primeflex.css"/>
+        <h:outputStylesheet library="primeflex_3_1_2" name="vela-blue.css"/>
+    </h:head>
+    <h:body class="surface-ground">
+        <p:growl>
+            <p:autoUpdate/>
+        </p:growl>
+        <div class="card surface-900">
+            <h2 style="text-align: center;">Registre su Informacion</h2>
+            <div class="grid sample-layout surface-900">
+                <div class="col-12 md:col-2 surface-800 p-3">
+                    <h5 style="text-align: center;">Resumen</h5>
+                    <h:panelGrid id="pnlResumen">
+                        <h6>Generales</h6>
+                        <hr/>
+                        <h:panelGrid columns="2" rendered="#{frmPersona.pasoActual gt 0}">
+                            <h:outputLabel value="Nombre:" rendered="#{not empty frmPersona.registro.nombres}"/>
+                            <h:outputText value="#{frmPersona.registro.nombres} #{frmPersona.registro.apellidos}" rendered="#{not empty frmPersona.registro.nombres}"/>
+
+                            <h:outputLabel value="Fecha Nac." rendered="#{not empty frmPersona.registro.fechaNacimiento}"/>
+                            <h:outputText value="#{frmPersona.registro.fechaNacimiento}" rendered="#{not empty frmPersona.registro.fechaNacimiento}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+
+                            <h:outputLabel value="Genero:" rendered="#{not empty frmPersona.registro.genero}"/>
+                            <h:outputText value="#{frmPersona.registro.genero}" rendered="#{not empty frmPersona.registro.genero}"/>
+                        </h:panelGrid>
+                        <h6>Documentos</h6>
+                        <hr/>
+                        <h:panelGrid columns="2" rendered="#{not empty frmPersona.registro.documentoList}">
+                            <ui:repeat value="#{frmPersona.registro.documentoList}" var="doc">
+                                <h:outputLabel value="#{doc.tipoDocumento.nombre}: "/>
+                                <h:outputText value="#{doc.valor}"/>
+                            </ui:repeat>
+                        </h:panelGrid>
+                        <h6>Medios de Contacto</h6>
+                        <hr/>
+                        <h:panelGrid columns="2" rendered="#{not empty frmPersona.registro.medioContactoList}">
+                            <ui:repeat value="#{frmPersona.registro.medioContactoList}" var="medc">
+                                <h:outputLabel value="#{medc.idTipoMedioContacto.nombre}: "/>
+                                <h:outputText value="#{medc.valor}"/>
+                            </ui:repeat>
+                        </h:panelGrid>
+                        <h6>Formacion</h6>
+                        <hr/>
+                        <h:panelGrid columns="3" rendered="#{not empty frmPersona.registro.formacionList}">
+                            <ui:repeat value="#{frmPersona.registro.formacionList}" var="forma">
+                                <h:outputLabel value="#{forma.institucion}: "/>
+                                <h:outputText value=" (#{forma.nivelEducativo}) "/>
+                                <h:outputText value="#{forma.fechaDesde}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </ui:repeat>
+                        </h:panelGrid>
+                        <h6>Experiencia</h6>
+                        <hr/>
+                        <h:panelGrid columns="3" rendered="#{not empty frmPersona.registro.experienciaList}">
+                            <ui:repeat value="#{frmPersona.registro.experienciaList}" var="expe">
+                                <h:outputLabel value="#{expe.institucion}: "/>
+                                <h:outputText value=" (#{expe.posicionLaboral}) "/>
+                                <h:outputText value="#{expe.fechaDesde}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </ui:repeat>
+                        </h:panelGrid>
+                        <p:commandButton disabled="#{frmPersona.pasoActual lt 5}" value="Registrarse"/>
+
+                    </h:panelGrid>
+                </div>
+                <div class="col-12 md:col-10 col-nogutter p-3">
+                    <div class="grid">
+                        <div class="col-12 col-nogutter">
+                            <p:steps activeIndex="#{frmPersona.pasoActual}" id="pasos">
+                                <p:menuitem value="Generales"/>
+                                <p:menuitem value="Documentos"/>
+                                <p:menuitem value="Medios de Contacto"/>
+                                <p:menuitem value="Formacion"/>
+                                <p:menuitem value="Experiencia"/>
+                            </p:steps>
+                        </div>
+                        <div class="col-12" id="pnlPrincipal">
+                            <div class="grid border-round">
+                                <h:panelGroup id="pnlproceso">
+                                    <h:form id="frmGenerales" rendered="#{frmPersona.pasoActual==0}">
+                                        <p:commandButton value="INICIAR" actionListener="#{frmPersona.btnNuevoHandler}" process="@this" update="@form"/>
+                                        <h:panelGrid columns="3" rendered="#{frmPersona.estado=='CREAR'}">
+                                            <p:outputLabel for="txtNombre" value="Nombres"/>
+                                            <p:inputText id="txtNombre" value="#{frmPersona.registro.nombres}" size="70"/>
+                                            <p:message for="txtNombre" showDetail="true"/>
+                                            <p:outputLabel for="txtApellidos" value="Apellidos"/>
+                                            <p:inputText id="txtApellidos" value="#{frmPersona.registro.apellidos}" size="70"/>
+                                            <p:message for="txtApellidos" showDetail="true"/>
+                                            <p:outputLabel for="txtFechaNacimiento" value="Fecha de Nacimiento:"/>
+                                            <p:calendar id="txtFechaNacimiento" value="#{frmPersona.registro.fechaNacimiento}"
+                                                        pattern="dd/MM/yyyy"/>
+                                            <p:message for="txtFechaNacimiento" showDetail="true"/>
+                                            <p:outputLabel value="Genero" for="chkGenero"/>
+                                            <p:selectOneRadio id="chkGenero" value="#{frmPersona.registro.genero}">
+                                                <f:selectItems value="#{frmPersona.listaGeneros}" var="gen"
+                                                               itemLabel="#{gen}" itemValue="#{gen}"/> 
+                                            </p:selectOneRadio>
+                                            <h:panelGroup/>
+                                            <p:commandButton value="SIGUIENTE" actionListener="#{frmPersona.avanzarPasoActual}" process="@form" update=":pnlproceso :pnlResumen :pasos"/>
+                                        </h:panelGrid>
+                                    </h:form>
+                                    <h:panelGroup id="pnlDocumentos" rendered="#{frmPersona.pasoActual==1}">
+                                        <h:form id="frmTblDocumentos">
+                                            <h:panelGrid>
+                                                <p:dataTable id="tblPrincipal"
+                                                             var="r1"
+                                                             value="#{frmPersona.registro.documentoList}"
+                                                             rendered="#{frmPersona.frmDocumento.estado=='NINGUNO'}"
+                                                             > 
+                                                    <p:column headerText="Tipo">
+                                                        <h:outputText value="#{r1.tipoDocumento.nombre}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Valor">
+                                                        <h:outputText value="#{r1.valor}"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                                <p:commandButton value="Nuevo" actionListener="#{frmPersona.frmDocumento.btnNuevoHandler}" update=":dlgNuevoDocumento" oncomplete="PF('dlgNuevoDocumento').show();"/>
+                                                <p:messages showDetail="true"/>
+                                                <p:commandButton disabled="#{empty frmPersona.registro.documentoList}" value="SIGUIENTE" actionListener="#{frmPersona.avanzarPasoActual}" process="@form" update=":pnlproceso :pnlResumen :pasos"/>
+                                            </h:panelGrid>
+                                        </h:form>
+                                    </h:panelGroup>
+                                    <h:panelGroup id="pnlMedios" rendered="#{frmPersona.pasoActual==2}">
+                                        <h:form id="frmMedios">
+                                            <h:panelGrid>
+                                                <p:dataTable id="tblMedios"
+                                                             var="r2"
+                                                             value="#{frmPersona.registro.medioContactoList}"
+                                                             rendered="#{frmPersona.frmMedioContacto.estado=='NINGUNO'}"
+                                                             >
+                                                    <p:column headerText="Tipo">
+                                                        <h:outputText value="#{r2.idTipoMedioContacto.nombre}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Valor">
+                                                        <h:outputText value="#{r2.valor}"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                                <p:commandButton value="Nuevo" 
+                                                                 actionListener="#{frmPersona.frmMedioContacto.btnNuevoHandler}" 
+                                                                 update=":dlgNuevoMedio" oncomplete="PF('dlgNuevoMedio').show();"/>
+                                                <p:messages showDetail="true"/>
+                                                <p:commandButton disabled="#{empty frmPersona.registro.medioContactoList}" 
+                                                                 value="SIGUIENTE" 
+                                                                 actionListener="#{frmPersona.avanzarPasoActual}" 
+                                                                 process="@form" update=":pnlproceso :pnlResumen :pasos"/>
+                                            </h:panelGrid>
+                                        </h:form>
+                                    </h:panelGroup>
+                                    <h:panelGroup id="pnlFormacion" rendered="#{frmPersona.pasoActual==3}">
+                                        <h:form id="frmFormacion">
+                                            <h:panelGrid>
+                                                <p:dataTable id="tblFormacion"
+                                                             var="r3"
+                                                             value="#{frmPersona.registro.formacionList}"
+                                                             rendered="#{frmPersona.frmFormacion.estado=='NINGUNO'}"
+                                                             >
+                                                    <p:column headerText="Nivel Educativo">
+                                                        <h:outputText value="#{r3.nivelEducativo}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Fecha de Inicio">
+                                                        <h:outputText value="#{r3.fechaDesde}">
+                                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column headerText="Fecha de Finalizacion">
+                                                        <h:outputText value="#{r3.fechaHasta}">
+                                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column headerText="Institucion">
+                                                        <h:outputText value="#{r3.institucion}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Estado">
+                                                        <h:outputText value="#{r3.titulado?'Titulado':'Sin Titular'}"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                                <p:commandButton value="Nuevo" 
+                                                                 actionListener="#{frmPersona.frmFormacion.btnNuevoHandler}" 
+                                                                 update=":dlgNuevoFormacion" oncomplete="PF('dlgNuevoFormacion').show();"/>
+                                                <p:messages showDetail="true"/>
+                                                <p:commandButton disabled="#{empty frmPersona.registro.formacionList}" 
+                                                                 value="SIGUIENTE" 
+                                                                 actionListener="#{frmPersona.avanzarPasoActual}" 
+                                                                 process="@form" update=":pnlproceso :pnlResumen :pasos"/>
+                                            </h:panelGrid>
+                                        </h:form>
+                                    </h:panelGroup>
+                                    <h:panelGroup id="pnlExperiencia" rendered="#{frmPersona.pasoActual==4}">
+                                        <h:form id="frmExperiencia">
+                                            <h:panelGrid>
+                                                <p:dataTable id="tblExperiencia"
+                                                             var="r4"
+                                                             value="#{frmPersona.registro.experienciaList}"
+                                                             rendered="#{frmPersona.frmExperiencia.estado=='NINGUNO'}"
+                                                             >
+                                                    <p:column headerText="Posicion Laboral">
+                                                        <h:outputText value="#{r4.posicionLaboral}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Fecha de Inicio">
+                                                        <h:outputText value="#{r4.fechaDesde}">
+                                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column headerText="Fecha de Finalizacion">
+                                                        <h:outputText value="#{r4.fechaHasta}">
+                                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column headerText="Institucion">
+                                                        <h:outputText value="#{r4.institucion}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Referencia">
+                                                        <h:outputText value="#{r4.referencia}"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                                <p:commandButton value="Nuevo" 
+                                                                 actionListener="#{frmPersona.frmExperiencia.btnNuevoHandler}" 
+                                                                 update=":dlgNuevoExperiencia" oncomplete="PF('dlgNuevoExperiencia').show();"/>
+                                                <p:messages showDetail="true"/>
+                                                <p:commandButton disabled="#{empty frmPersona.registro.experienciaList}" 
+                                                                 value="SIGUIENTE" 
+                                                                 actionListener="#{frmPersona.avanzarPasoActual}" 
+                                                                 process="@form" update=":pnlproceso :pnlResumen :pasos"/>
+                                            </h:panelGrid>
+                                        </h:form>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 p-6">
+                    Disclaimer: toda la informacion...
+                </div>
+            </div>
+        </div>
+        <p:dialog id="dlgNuevoDocumento" dynamic="true" modal="true" cache="false" widgetVar="dlgNuevoDocumento">
+            <h:form id="frmDetalleDocumentos" rendered="#{frmPersona.frmDocumento.estado!='NINGUNO'}">
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="lstTipoDocumento" value="Tipo de Documento"/>
+                    <h:selectOneMenu id="lstTipoDocumento" value="#{frmPersona.frmDocumento.registro.tipoDocumento}" 
+                                     valueChangeListener="#{frmPersona.frmDocumento.cambiarTipoDocumento}">
+                        <f:selectItem noSelectionOption="true" itemLabel="Seleccione uno"/>
+                        <f:selectItems value="#{frmPersona.frmDocumento.listaTipoDocumento}"
+                                       var="tdoc" itemLabel="#{tdoc.nombre}" itemValue="#{tdoc}"/>
+                        <f:converter converterId="tipodocumentoconverter"/>
+                        <p:ajax process="@this"/>
+                    </h:selectOneMenu>
+                    <p:outputLabel for="txtValor" value="Valor"/>
+                    <p:inputText id="txtValor" value="#{frmPersona.frmDocumento.registro.valor}" size="70" validator="#{frmPersona.frmDocumento.validarTipo}"/>
+                </p:panelGrid>
+                <p:commandButton value="Agregar" actionListener="#{frmPersona.agregarDocumento}" process="@this txtValor  " oncomplete="PF('dlgNuevoDocumento').hide();" update=":pnlDocumentos"/>
+                <p:messages showDetail="true"/>
+            </h:form>   
+        </p:dialog>
+        <p:dialog id="dlgNuevoMedio" dynamic="true" modal="true" cache="false" widgetVar="dlgNuevoMedio">
+            <h:form id="frmNuevoMedio" >
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="lstTipoMedio" value="Tipo de Medio de Contacto"/>
+                    <h:selectOneMenu id="lstTipoMedio" value="#{frmPersona.frmMedioContacto.registro.idTipoMedioContacto}" 
+                                     >
+                        <f:selectItem noSelectionOption="true" itemLabel="Seleccione uno" value="#{null}"/>
+                        <f:selectItems value="#{frmPersona.frmMedioContacto.listaTipoMedioContacto}"
+                                       var="tdoc" itemLabel="#{tdoc.nombre}" itemValue="#{tdoc}"/>
+                        <f:converter converterId="tipomedioconverter"/>
+                        <p:ajax process="@this"/>
+                    </h:selectOneMenu>
+                    <p:outputLabel for="txtValor" value="Valor"/>
+                    <p:inputText id="txtValor" value="#{frmPersona.frmMedioContacto.registro.valor}" size="70" validator="#{frmPersona.frmMedioContacto.validarTipo}"/>
+                </p:panelGrid>
+                <p:commandButton value="Agregar" actionListener="#{frmPersona.agregarMedio}"
+                                 process="@this txtValor  " oncomplete="PF('dlgNuevoMedio').hide();" update=":pnlMedios"/>
+                <p:messages showDetail="true"/>
+            </h:form>
+        </p:dialog>
+        <p:dialog id="dlgNuevoFormacion" dynamic="true" modal="true" cache="false" widgetVar="dlgNuevoFormacion">
+            <h:form id="frmNuevoFormacion" >
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Nivel Educativo" for="lstNivel"/>
+                    <h:selectOneMenu id="lstNivel" value="#{frmPersona.frmFormacion.registro.nivelEducativo}">
+                        <f:selectItems value="#{frmPersona.frmFormacion.listaNivelesEducativos}"
+                                       var="edu" itemLabel="#{edu}" itemValue="#{edu}"/>
+                    </h:selectOneMenu>
+                    <p:outputLabel for="txtInstitucion" value="Institucion"/>
+                    <p:autoComplete id="txtInstitucion" forceSelection="false" size="70" required="true" 
+                                    value="#{frmPersona.frmFormacion.registro.institucion}"
+                                    requiredMessage="Agregue o Seleccione una institucion educativa"
+                                    minQueryLength="3"
+                                    scrollHeight="250"
+                                    cache="false"
+                                    completeMethod="#{frmPersona.frmFormacion.buscarInstitucionesEducactivas}"
+                                    emptyMessage="no hay coincidencias"
+                                    converter="textoamayusculas"
+                                    >
+                        <f:ajax event="blur" render="@this"/>
+                    </p:autoComplete>
+                    <p:outputLabel value="Fecha de inicio" for="txtFechaDesde"/>
+                    <p:calendar id="txtFechaDesde" value="#{frmPersona.frmFormacion.registro.fechaDesde}" pattern="dd/MM/yyyy"/>
+                    <p:outputLabel value="Fecha de finalizacion" for="txtFechaHasta"/>
+                    <p:calendar id="txtFechaHasta"
+                                value="#{frmPersona.frmFormacion.registro.fechaHasta}" 
+                                pattern="dd/MM/yyyy"/>
+                    <p:outputLabel value="Titulado" for="chkTitulado"/>
+                    <h:selectBooleanCheckbox id="chkTitulado" value="#{frmPersona.frmFormacion.registro.titulado}">
+                        <f:ajax execute="@this" render="txtTituloObtenido"/>
+                    </h:selectBooleanCheckbox>
+                    <p:outputLabel for="txtTituloObtenido" value="Titulo Obtenido"/>
+                    <p:autoComplete id="txtTituloObtenido" forceSelection="false" size="70" required="#{frmPersona.frmFormacion.registro.titulado}"
+                                    requiredMessage="Al marcar la obtencion debe agregar un nombre del titulo (Por ejemplo: Ingeniero Civil)"
+                                    disabled="#{not frmPersona.frmFormacion.registro.titulado}"
+                                    value="#{frmPersona.frmFormacion.registro.titulo}"
+                                    minQueryLength="3"
+                                    scrollHeight="250"
+                                    cache="false"
+                                    completeMethod="#{frmPersona.frmFormacion.buscarTitulos}"
+                                    emptyMessage="no hay coincidencias"
+                                    converter="textoamayusculas"
+                                    >
+                        <f:ajax event="blur" render="@this"/>
+                    </p:autoComplete>
+                </p:panelGrid>
+                <p:commandButton value="Agregar" actionListener="#{frmPersona.agregarFormacion}"
+                                 process="@form" oncomplete="PF('dlgNuevoFormacion').hide();" update=":pnlFormacion"/>
+                <p:messages showDetail="true"/>
+            </h:form>
+        </p:dialog>
+        <p:dialog id="dlgNuevoExperiencia" dynamic="true" modal="true" cache="false" widgetVar="dlgNuevoExperiencia">
+            <h:form id="frmNuevoExperiencia" >
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="txtInstitucion" value="Institucion"/>
+                    <p:autoComplete id="txtInstitucion" forceSelection="false" size="70" required="true" 
+                                    value="#{frmPersona.frmExperiencia.registro.institucion}"
+                                    requiredMessage="Agregue o Seleccione una institucion"
+                                    minQueryLength="3"
+                                    scrollHeight="250"
+                                    cache="false"
+                                    completeMethod="#{frmPersona.frmExperiencia.findInstitucionByNombre}"
+                                    emptyMessage="no hay coincidencias"
+                                    converter="textoamayusculas"
+                                    >
+                        <f:ajax event="blur" render="@this"/>
+                    </p:autoComplete>
+                    <p:outputLabel for="txtPosicionLaboral" value="Posicion Laboral"/>
+                    <p:autoComplete id="txtPosicionLaboral" forceSelection="false" size="70"
+                                    value="#{frmPersona.frmExperiencia.registro.posicionLaboral}"
+                                    minQueryLength="3"
+                                    scrollHeight="250"
+                                    cache="false"
+                                    completeMethod="#{frmPersona.frmExperiencia.findPosicionLaboralByNombre}"
+                                    emptyMessage="no hay coincidencias"
+                                    converter="textoamayusculas"
+                                    >
+                        <f:ajax event="blur" render="@this"/>
+                    </p:autoComplete>
+                    <p:outputLabel value="Fecha de inicio" for="txtFechaDesde"/>
+                    <p:calendar id="txtFechaDesde" value="#{frmPersona.frmExperiencia.registro.fechaDesde}" pattern="dd/MM/yyyy"/>
+                    <p:outputLabel value="Fecha de finalizacion" for="txtFechaHasta"/>
+                    <p:calendar id="txtFechaHasta"
+                                value="#{frmPersona.frmExperiencia.registro.fechaHasta}" 
+                                pattern="dd/MM/yyyy"/>
+                    <p:outputLabel for="txtReferencia" value="Referencia Laboral"/>
+                    <p:inputTextarea id="txtReferencia" value="#{frmPersona.frmExperiencia.registro.referencia}"
+                                     cols="70" rows="3"/>
+                </p:panelGrid>
+                <p:commandButton value="Agregar" actionListener="#{frmPersona.agregarExperiencia}"
+                                 process="@form" oncomplete="PF('dlgNuevoExperiencia').hide();" update=":pnlExperiencia"/>
+                <p:messages showDetail="true"/>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
