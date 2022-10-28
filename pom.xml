@@ -93,6 +93,7 @@
             <artifactId>primefaces</artifactId>
             <version>11.0.0</version>
             <classifier>jakarta</classifier>
+            <scope>provided</scope>
         </dependency>
         
         <dependency>
