@@ -133,4 +133,9 @@ public class Documento implements Serializable {
         return "sv.edu.occ.ues.ingenieria.prn335.bolsatrabajoprn335.entity.Documento[ documentoPK=" + documentoPK + " ]";
     }
     
+    public void getPersona(Persona persona) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    
 }
