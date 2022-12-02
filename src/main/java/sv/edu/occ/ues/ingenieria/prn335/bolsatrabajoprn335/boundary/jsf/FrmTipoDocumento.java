@@ -22,7 +22,7 @@ import sv.edu.occ.ues.ingenieria.prn335.bolsatrabajoprn335.entity.TipoDocumento;
 //@Named
 //@Dependent
 public class FrmTipoDocumento implements Serializable{
-//    
+    
 //    @Inject
 //    TipoDocumentoBean tBean;
 //    
@@ -41,6 +41,6 @@ public class FrmTipoDocumento implements Serializable{
 //    public void seModeloTabla (LazyDataModel<TipoDocumento> modelo){
 //        this.modeloTabla = modelo;
 //    }
-//    
+    
    
 }
