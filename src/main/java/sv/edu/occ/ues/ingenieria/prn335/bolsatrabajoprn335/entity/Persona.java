@@ -4,6 +4,7 @@
  */
 package sv.edu.occ.ues.ingenieria.prn335.bolsatrabajoprn335.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -131,6 +132,7 @@ public class Persona implements Serializable {
         this.direccion = direccion;
     }
 
+    @JsonbTransient
     public List<Formacion> getFormacionList() {
         return formacionList;
     }
@@ -139,6 +141,7 @@ public class Persona implements Serializable {
         this.formacionList = formacionList;
     }
 
+    @JsonbTransient
     public List<MedioContacto> getMedioContactoList() {
         return medioContactoList;
     }
@@ -147,6 +150,7 @@ public class Persona implements Serializable {
         this.medioContactoList = medioContactoList;
     }
 
+    @JsonbTransient
     public List<Experiencia> getExperienciaList() {
         return experienciaList;
     }
@@ -155,6 +159,7 @@ public class Persona implements Serializable {
         this.experienciaList = experienciaList;
     }
 
+    @JsonbTransient
     public List<Documento> getDocumentoList() {
         return documentoList;
     }

@@ -4,6 +4,7 @@
  */
 package sv.edu.occ.ues.ingenieria.prn335.bolsatrabajoprn335.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import java.io.Serializable;
 import java.util.Date;
 import jakarta.persistence.Basic;
@@ -92,6 +93,7 @@ public class Documento implements Serializable {
         this.fechaModificacion = fechaModificacion;
     }
 
+    @JsonbTransient
     public Persona getPersona() {
         return persona;
     }
@@ -100,6 +102,7 @@ public class Documento implements Serializable {
         this.persona = persona;
     }
 
+    @JsonbTransient
     public TipoDocumento getTipoDocumento() {
         return tipoDocumento;
     }
